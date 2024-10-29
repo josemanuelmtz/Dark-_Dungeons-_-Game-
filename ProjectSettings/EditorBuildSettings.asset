@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Settings/Scenes/URP2DSceneTemplate.unity
-    guid: 2cda990e2423bbf4892e6590ba056729
+    path: Assets/Scenes/PantallaInicio.unity
+    guid: 04467e3be046c8a45a7f02fc7853c91f
+  - enabled: 1
+    path: Assets/Scenes/Dungeon1.unity
+    guid: a0d803636ab79b941b69a12ebb287cb3
   m_configObjects: {}
