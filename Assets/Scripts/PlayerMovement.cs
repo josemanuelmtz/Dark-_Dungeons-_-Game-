@@ -4,66 +4,191 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    private Rigidbody2D rb2D; // Referencia al componente Rigidbody2D
-    private Vector2 moveDelta; // Diferencia entre la posición actual y la distancia al siguiente movimiento
+    private Rigidbody2D rb2D;
+    private Vector2 moveDelta;
     private BoxCollider2D boxCollider;
     private RaycastHit2D hit;
 
-    public float moveSpeed = 150f; // Velocidad de movimiento del jugador
+    public float moveSpeed = 150f;
+    private Animator animator;
+
+    string animationState = "AnimationState";
+
+    private bool isAttacking = false;
+
+    enum CharStates {
+        walkSouth = 1,
+        walkNorth = 2,
+        walkEast = 3,
+        walkWest = 4,
+        atkSouth = 5,
+        atkNorth = 6,
+        atkEast = 7,
+        atkWest = 8,
+        idleSouth = 9,
+        idleNorth = 10,
+        idleEast = 11,
+        idleWest = 12
+    }
+
+    private CharStates currentState = CharStates.idleSouth; // Estado inicial por defecto es idle mirando al sur
+    private CharStates lastMoveState = CharStates.idleSouth; // Última dirección de movimiento
 
     private void Start()
     {
-        // Obtiene los componentes necesarios
         rb2D = GetComponent<Rigidbody2D>();
         boxCollider = GetComponent<BoxCollider2D>();
+        animator = GetComponent<Animator>();
+        
+        // Iniciar en estado idle al sur por defecto
+        animator.SetInteger(animationState, (int)currentState);
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
-        // Captura el movimiento horizontal (-1 para izquierda, 0 para ninguno, 1 para derecha)
-        float x = Input.GetAxisRaw("Horizontal");
+        if (!isAttacking)
+        {
+            HandleMovement();
+        }
+        HandleActions();
+    }
 
-        // Captura el movimiento vertical
+    private void HandleMovement()
+    {
+        float x = Input.GetAxisRaw("Horizontal");
         float y = Input.GetAxisRaw("Vertical");
 
-        // Restablece el delta de movimiento
         moveDelta = new Vector2(x, y);
 
-        // Cambia la dirección del sprite dependiendo de si el jugador se mueve a la derecha o izquierda
-        if (moveDelta.x > 0)
+        if (x != 0 || y != 0)
         {
-            transform.localScale = Vector3.one; // Dirección normal
+            // Cambia el estado dependiendo de la dirección del movimiento
+            if (y > 0)
+            {
+                currentState = CharStates.walkNorth;
+            }
+            else if (y < 0)
+            {
+                currentState = CharStates.walkSouth;
+            }
+            else if (x > 0)
+            {
+                currentState = CharStates.walkEast;
+            }
+            else if (x < 0)
+            {
+                currentState = CharStates.walkWest;
+            }
+
+            lastMoveState = currentState; // Guardar la última dirección de movimiento
+            animator.SetInteger(animationState, (int)currentState);
         }
-        else if (moveDelta.x < 0)
+        else
         {
-            transform.localScale = new Vector3(-1, 1, 1); // Invertir sprite en el eje X
+            // Si no hay movimiento, mantener el estado idle en la última dirección
+            switch (lastMoveState)
+            {
+                case CharStates.walkNorth:
+                    currentState = CharStates.idleNorth;
+                    break;
+                case CharStates.walkSouth:
+                    currentState = CharStates.idleSouth;
+                    break;
+                case CharStates.walkEast:
+                    currentState = CharStates.idleEast;
+                    break;
+                case CharStates.walkWest:
+                    currentState = CharStates.idleWest;
+                    break;
+            }
+            animator.SetInteger(animationState, (int)currentState);
         }
 
-        // Comprobación de colisiones antes de mover en el eje Y
+        MovePlayer();
+    }
+
+    private void HandleActions()
+    {
+        if (Input.GetKeyDown(KeyCode.K) && !isAttacking)
+        {
+            StartCoroutine(Attack());
+        }
+    }
+
+    private IEnumerator Attack()
+    {
+        isAttacking = true;
+
+        // Detener el movimiento
+        rb2D.velocity = Vector2.zero;
+
+        // Atacar en la última dirección de movimiento
+        switch (lastMoveState)
+        {
+            case CharStates.walkNorth:
+            case CharStates.idleNorth:
+                currentState = CharStates.atkNorth;
+                break;
+            case CharStates.walkSouth:
+            case CharStates.idleSouth:
+                currentState = CharStates.atkSouth;
+                break;
+            case CharStates.walkEast:
+            case CharStates.idleEast:
+                currentState = CharStates.atkEast;
+                break;
+            case CharStates.walkWest:
+            case CharStates.idleWest:
+                currentState = CharStates.atkWest;
+                break;
+        }
+
+        animator.SetInteger(animationState, (int)currentState);
+
+        yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length); // Esperar hasta que la animación de ataque termine
+
+        isAttacking = false;
+
+        // Volver al estado idle en la última dirección después de atacar
+        switch (lastMoveState)
+        {
+            case CharStates.walkNorth:
+                currentState = CharStates.idleNorth;
+                break;
+            case CharStates.walkSouth:
+                currentState = CharStates.idleSouth;
+                break;
+            case CharStates.walkEast:
+                currentState = CharStates.idleEast;
+                break;
+            case CharStates.walkWest:
+                currentState = CharStates.idleWest;
+                break;
+        }
+        animator.SetInteger(animationState, (int)currentState);
+    }
+
+    private void MovePlayer()
+    {
         hit = Physics2D.BoxCast(transform.position, boxCollider.size, 0, new Vector2(0, moveDelta.y), Mathf.Abs(moveDelta.y * Time.deltaTime), LayerMask.GetMask("Actor", "Blocking"));
 
         if (hit.collider == null)
         {
-            // Si no hay colisión, mueve al jugador en el eje Y
             rb2D.velocity = new Vector2(rb2D.velocity.x, moveDelta.y * moveSpeed * Time.fixedDeltaTime);
         }
         else
         {
-            // Si hay colisión, detén el movimiento en el eje Y
             rb2D.velocity = new Vector2(rb2D.velocity.x, 0);
         }
 
-        // Comprobación de colisiones antes de mover en el eje X
         hit = Physics2D.BoxCast(transform.position, boxCollider.size, 0, new Vector2(moveDelta.x, 0), Mathf.Abs(moveDelta.x * Time.deltaTime), LayerMask.GetMask("Actor", "Blocking"));
 
         if (hit.collider == null)
         {
-            // Si no hay colisión, mueve al jugador en el eje X
             rb2D.velocity = new Vector2(moveDelta.x * moveSpeed * Time.fixedDeltaTime, rb2D.velocity.y);
         }
         else
         {
-            // Si hay colisión, detén el movimiento en el eje X
             rb2D.velocity = new Vector2(0, rb2D.velocity.y);
         }
     }
