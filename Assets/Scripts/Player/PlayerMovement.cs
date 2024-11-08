@@ -9,8 +9,18 @@ public class PlayerMovement : MonoBehaviour
     private BoxCollider2D boxCollider;
     private RaycastHit2D hit;
 
+    // Movimiento
     public float moveSpeed = 150f;
+    public float attackSpeedMultiplier = 1.7f;
     private Animator animator;
+
+    // Ataque
+    [SerializeField] private Transform controladorGolpeSur;
+    [SerializeField] private Transform controladorGolpeNorte;
+    [SerializeField] private Transform controladorGolpeEste;
+    [SerializeField] private Transform controladorGolpeOeste;
+    [SerializeField] private float radioGolpe;
+    [SerializeField] private float danoGolpe;
 
     string animationState = "AnimationState";
 
@@ -31,16 +41,15 @@ public class PlayerMovement : MonoBehaviour
         idleWest = 12
     }
 
-    private CharStates currentState = CharStates.idleSouth; // Estado inicial por defecto es idle mirando al sur
-    private CharStates lastMoveState = CharStates.idleSouth; // Última dirección de movimiento
+    private CharStates currentState = CharStates.idleSouth;
+    private CharStates lastMoveState = CharStates.idleSouth;
 
     private void Start()
     {
         rb2D = GetComponent<Rigidbody2D>();
         boxCollider = GetComponent<BoxCollider2D>();
         animator = GetComponent<Animator>();
-        
-        // Iniciar en estado idle al sur por defecto
+
         animator.SetInteger(animationState, (int)currentState);
     }
 
@@ -62,7 +71,6 @@ public class PlayerMovement : MonoBehaviour
 
         if (x != 0 || y != 0)
         {
-            // Cambia el estado dependiendo de la dirección del movimiento
             if (y > 0)
             {
                 currentState = CharStates.walkNorth;
@@ -80,12 +88,11 @@ public class PlayerMovement : MonoBehaviour
                 currentState = CharStates.walkWest;
             }
 
-            lastMoveState = currentState; // Guardar la última dirección de movimiento
+            lastMoveState = currentState;
             animator.SetInteger(animationState, (int)currentState);
         }
         else
         {
-            // Si no hay movimiento, mantener el estado idle en la última dirección
             switch (lastMoveState)
             {
                 case CharStates.walkNorth:
@@ -118,11 +125,9 @@ public class PlayerMovement : MonoBehaviour
     private IEnumerator Attack()
     {
         isAttacking = true;
-
-        // Detener el movimiento
+        animator.speed = attackSpeedMultiplier;
         rb2D.velocity = Vector2.zero;
 
-        // Atacar en la última dirección de movimiento
         switch (lastMoveState)
         {
             case CharStates.walkNorth:
@@ -144,12 +149,13 @@ public class PlayerMovement : MonoBehaviour
         }
 
         animator.SetInteger(animationState, (int)currentState);
+        Golpe();
 
-        yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length); // Esperar hasta que la animación de ataque termine
+        yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length / attackSpeedMultiplier);
 
+        animator.speed = 1f;
         isAttacking = false;
 
-        // Volver al estado idle en la última dirección después de atacar
         switch (lastMoveState)
         {
             case CharStates.walkNorth:
@@ -191,5 +197,45 @@ public class PlayerMovement : MonoBehaviour
         {
             rb2D.velocity = new Vector2(0, rb2D.velocity.y);
         }
+    }
+
+    private void Golpe()
+    {
+        Transform controladorGolpeActual = controladorGolpeSur;
+
+        switch (lastMoveState)
+        {
+            case CharStates.walkNorth:
+            case CharStates.idleNorth:
+                controladorGolpeActual = controladorGolpeNorte;
+                break;
+            case CharStates.walkEast:
+            case CharStates.idleEast:
+                controladorGolpeActual = controladorGolpeEste;
+                break;
+            case CharStates.walkWest:
+            case CharStates.idleWest:
+                controladorGolpeActual = controladorGolpeOeste;
+                break;
+        }
+
+        Collider2D[] objetos = Physics2D.OverlapCircleAll(controladorGolpeActual.position, radioGolpe);
+        foreach (Collider2D colisionador in objetos)
+        {
+            if (colisionador.CompareTag("Enemy")){
+                colisionador.transform.GetComponent<EnemyLife>().TomarDano(danoGolpe);
+            } else if (colisionador.CompareTag("Boss")){
+                colisionador.transform.GetComponent<BossLife>().TomarDano(danoGolpe);
+            }
+        }
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(controladorGolpeSur.position, radioGolpe);
+        Gizmos.DrawWireSphere(controladorGolpeNorte.position, radioGolpe);
+        Gizmos.DrawWireSphere(controladorGolpeEste.position, radioGolpe);
+        Gizmos.DrawWireSphere(controladorGolpeOeste.position, radioGolpe);
     }
 }

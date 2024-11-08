@@ -14,9 +14,10 @@ GameObject:
   - component: {fileID: 6971063206186100684}
   - component: {fileID: 5954555886666088534}
   - component: {fileID: 5542295369348528353}
+  - component: {fileID: 984374472839899279}
   m_Layer: 0
   m_Name: ZombieObject
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -74,9 +75,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 2
+  m_SortingLayerID: -338472959
+  m_SortingLayer: 3
+  m_SortingOrder: 0
   m_Sprite: {fileID: -1333605444, guid: f0eb41d5c2097724c90de3bc2ed4dc06, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -194,3 +195,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 0.2
+--- !u!114 &984374472839899279
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1261838313776544572}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a65ab1ea8bc558341bcba1970b151a5d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  vida: 10
