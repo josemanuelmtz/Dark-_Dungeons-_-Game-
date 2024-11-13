@@ -5,6 +5,13 @@ using UnityEngine;
 public class EnemyLife : MonoBehaviour
 {
     [SerializeField] private float vida;
+    private PlayerScore playerScore; // Referencia al script de puntuación
+
+    private void Start()
+    {
+        // Busca el objeto que contiene el script PlayerScore en la escena
+        playerScore = FindObjectOfType<PlayerScore>();
+    }
 
     public void TomarDano(float dano)
     {
@@ -17,6 +24,12 @@ public class EnemyLife : MonoBehaviour
 
     private void Muerte()
     {
+        // Otorga 50 puntos al jugador al morir
+        if (playerScore != null)
+        {
+            playerScore.AumentarPuntuacion(50);
+        }
+
         // Destruye el objeto si la vida es 0 o menos
         Destroy(gameObject);
     }

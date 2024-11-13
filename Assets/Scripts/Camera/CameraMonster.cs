@@ -14,5 +14,14 @@ public class CameraTrigger : MonoBehaviour
                 enemyAI.ActivateAttack();
             }
         }
+        if (other.CompareTag("Boss"))
+        {
+            // Llama al método para activar el ataque en el boss
+            BossAI bossAI = other.GetComponent<BossAI>();
+            if (bossAI != null)
+            {
+                bossAI.Attack();
+            }
+        }
     }
 }
