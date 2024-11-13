@@ -5,11 +5,12 @@ using UnityEngine;
 public class BossLife : MonoBehaviour
 {
     [SerializeField] private float vida;
-    private Animator animator;
+    private PlayerScore playerScore; // Referencia al script de puntuación
 
-    void Start()
+    private void Start()
     {
-        animator = GetComponent<Animator>();
+        // Busca el objeto que contiene el script PlayerScore en la escena
+        playerScore = FindObjectOfType<PlayerScore>();
     }
 
     public void TomarDano(float dano)
@@ -23,30 +24,13 @@ public class BossLife : MonoBehaviour
 
     private void Muerte()
     {
-        if (animator != null)
+        // Otorga 200 puntos al jugador al morir
+        if (playerScore != null)
         {
-            // Cambia el valor de "AnimationState" a 77 para reproducir la animación de muerte
-            animator.SetInteger("AnimationState", 77);
-
-            // Llama a la corutina para esperar que termine la animación y luego destruir el objeto
-            StartCoroutine(EsperarYDestruir());
+            playerScore.AumentarPuntuacion(200);
         }
-        else
-        {
-            // Si no tiene Animator, destruye el objeto directamente
-           Destroy(gameObject);
-        }
-    }
 
-    private IEnumerator EsperarYDestruir()
-    {
-        // Espera la duración de la animación asociada al parámetro "AnimationState"
-        float tiempoAnimacion = animator.GetCurrentAnimatorStateInfo(0).length;
-
-        // Espera el tiempo de la animación
-        yield return new WaitForSeconds(tiempoAnimacion);
-
-        // Destruye el objeto una vez que la animación termine
+        // Destruye el objeto si la vida es 0 o menos
         Destroy(gameObject);
     }
 }

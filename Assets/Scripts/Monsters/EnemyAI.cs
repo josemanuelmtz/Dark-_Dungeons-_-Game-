@@ -24,6 +24,11 @@ public class EnemyAI : MonoBehaviour
 
     private EnemyStates currentState = EnemyStates.idleSouth; // Estado inicial por defecto
 
+    public float damageAmount = 5f; // Daño al tocar al jugador
+    public float damageInterval = 1f; // Intervalo de tiempo en segundos entre cada daño
+
+    private float damageTimer = 0f; // Temporizador para contar el tiempo entre cada daño
+
     private void Start()
     {
         GameObject playerObject = GameObject.Find("Player");
@@ -51,6 +56,12 @@ public class EnemyAI : MonoBehaviour
         else
         {
             SetIdleState();
+        }
+
+        // Actualiza el temporizador para aplicar daño en intervalos regulares
+        if (damageTimer > 0f)
+        {
+            damageTimer -= Time.deltaTime;
         }
     }
 
@@ -107,5 +118,22 @@ public class EnemyAI : MonoBehaviour
     public void ActivateAttack()
     {
         hasBeenSeen = true;
+    }
+
+    // Detecta cuando el enemigo toca al jugador y aplica daño cada cierto intervalo
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            PlayerLife playerLife = collision.gameObject.GetComponent<PlayerLife>();
+
+            // Solo aplica daño si ha pasado el tiempo suficiente
+            if (damageTimer <= 0f)
+            {
+                // Aplica el daño de 5 en 5 y reinicia el temporizador
+                playerLife?.TomarDano(damageAmount); // Aplica el daño
+                damageTimer = damageInterval; // Reinicia el temporizador
+            }
+        }
     }
 }
