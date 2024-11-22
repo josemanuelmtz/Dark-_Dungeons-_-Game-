@@ -244,7 +244,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 30
   attackRange: 0.2
-  attackCooldown: 1
+  attackCooldown: 2
   damageAttack: 10
   damageTouch: 5
   controladorGolpeSur: {fileID: 3273218314342256705}

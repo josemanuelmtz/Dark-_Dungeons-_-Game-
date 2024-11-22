@@ -20,7 +20,8 @@ public class CameraTrigger : MonoBehaviour
             BossAI bossAI = other.GetComponent<BossAI>();
             if (bossAI != null)
             {
-                bossAI.Attack();
+                 Debug.LogWarning("Sí hay jefe");
+                bossAI.ActivateBoss();
             }
         }
     }

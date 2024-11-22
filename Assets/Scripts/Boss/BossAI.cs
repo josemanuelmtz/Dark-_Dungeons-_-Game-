@@ -16,6 +16,7 @@ public class BossAI : MonoBehaviour
 
     private float nextAttackTime = 0f;
     private bool isAttacking = false;
+    private bool isActivated = false; // Controla si el jefe está activado
 
     public Transform controladorGolpeSur;
     public Transform controladorGolpeNorte;
@@ -50,7 +51,8 @@ public class BossAI : MonoBehaviour
 
     private void Update()
     {
-        if (isAttacking || player == null)
+        // Si el jefe no está activado, permanece inactivo
+        if (!isActivated || isAttacking || player == null)
             return;
 
         float distanceToPlayer = Vector2.Distance(transform.position, player.position);
@@ -165,7 +167,6 @@ public class BossAI : MonoBehaviour
         }
     }
 
-
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;
@@ -179,5 +180,11 @@ public class BossAI : MonoBehaviour
             Gizmos.DrawWireSphere(controladorGolpeEste.position, radioGolpe);
         if (controladorGolpeOeste != null)
             Gizmos.DrawWireSphere(controladorGolpeOeste.position, radioGolpe);
+    }
+
+    // Método para activar al jefe
+    public void ActivateBoss()
+    {
+        isActivated = true;
     }
 }
