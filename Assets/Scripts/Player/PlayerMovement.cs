@@ -20,7 +20,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Transform controladorGolpeEste;
     [SerializeField] private Transform controladorGolpeOeste;
     [SerializeField] private float radioGolpe;
-    [SerializeField] private float danoGolpe;
+    [SerializeField] public float danoGolpe;
 
     string animationState = "AnimationState";
 
@@ -51,6 +51,11 @@ public class PlayerMovement : MonoBehaviour
         animator = GetComponent<Animator>();
 
         animator.SetInteger(animationState, (int)currentState);
+
+        if (GameManager.Instance != null)
+        {
+            danoGolpe = GameManager.Instance.playerDamage;
+        }
     }
 
     private void Update()
@@ -237,5 +242,16 @@ public class PlayerMovement : MonoBehaviour
         Gizmos.DrawWireSphere(controladorGolpeNorte.position, radioGolpe);
         Gizmos.DrawWireSphere(controladorGolpeEste.position, radioGolpe);
         Gizmos.DrawWireSphere(controladorGolpeOeste.position, radioGolpe);
+    }
+
+    public void AumentarAtaque(float incremento)
+    {
+        danoGolpe += incremento;
+
+        // Actualiza el GameManager con el nuevo valor
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.playerDamage = danoGolpe;
+        }
     }
 }

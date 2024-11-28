@@ -8,7 +8,6 @@ public class SpawnLevel1 : MonoBehaviour
     public GameObject[] enemyPrefabs; // Array de prefabs de enemigos (deben ser al menos dos)
     public int numberOfEnemies = 10; // Número total de enemigos a generar (debe ser par)
     public Tilemap floorTilemap; // El Tilemap del piso
-
     public int margin = 1; // Margen para evitar los bordes del Tilemap
 
     private void Start()
@@ -36,47 +35,36 @@ public class SpawnLevel1 : MonoBehaviour
         // Generar zombies
         while (spawnedZombies < enemiesPerType)
         {
-            // Generar una posición aleatoria dentro de los límites del Tilemap, considerando el margen
-            Vector3Int randomPosition = new Vector3Int(
-                Random.Range(minBounds.x, maxBounds.x),
-                Random.Range(minBounds.y, maxBounds.y),
-                0 // La capa z permanece en 0
-            );
-
-            // Verificar si hay un tile en la posición generada
+            Vector3Int randomPosition = GenerateRandomPosition(minBounds, maxBounds);
             if (floorTilemap.HasTile(randomPosition))
             {
-                // Elegir el prefab de zombie (índice 0)
                 GameObject selectedEnemyPrefab = enemyPrefabs[0];
-
-                // Instanciar el enemigo en el centro de la celda
                 Vector3 spawnPosition = floorTilemap.GetCellCenterWorld(randomPosition);
                 Instantiate(selectedEnemyPrefab, spawnPosition, Quaternion.identity);
-                spawnedZombies++; // Incrementar el contador de zombies generados
+                spawnedZombies++;
             }
         }
 
         // Generar esqueletos
         while (spawnedSkeletons < enemiesPerType)
         {
-            // Generar una posición aleatoria dentro de los límites del Tilemap, considerando el margen
-            Vector3Int randomPosition = new Vector3Int(
-                Random.Range(minBounds.x, maxBounds.x),
-                Random.Range(minBounds.y, maxBounds.y),
-                0 // La capa z permanece en 0
-            );
-
-            // Verificar si hay un tile en la posición generada
+            Vector3Int randomPosition = GenerateRandomPosition(minBounds, maxBounds);
             if (floorTilemap.HasTile(randomPosition))
             {
-                // Elegir el prefab de esqueleto (índice 1)
                 GameObject selectedEnemyPrefab = enemyPrefabs[1];
-
-                // Instanciar el enemigo en el centro de la celda
                 Vector3 spawnPosition = floorTilemap.GetCellCenterWorld(randomPosition);
                 Instantiate(selectedEnemyPrefab, spawnPosition, Quaternion.identity);
-                spawnedSkeletons++; // Incrementar el contador de esqueletos generados
+                spawnedSkeletons++;
             }
         }
+    }
+
+    private Vector3Int GenerateRandomPosition(Vector3Int minBounds, Vector3Int maxBounds)
+    {
+        return new Vector3Int(
+            Random.Range(minBounds.x, maxBounds.x),
+            Random.Range(minBounds.y, maxBounds.y),
+            0
+        );
     }
 }

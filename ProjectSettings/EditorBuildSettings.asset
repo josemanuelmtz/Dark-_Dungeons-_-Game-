@@ -12,6 +12,27 @@ EditorBuildSettings:
     path: Assets/Scenes/PantallaInicio.unity
     guid: 04467e3be046c8a45a7f02fc7853c91f
   - enabled: 1
+    path: Assets/Scenes/Controles.unity
+    guid: a12527620af49b14fb4fd81d198c56b1
+  - enabled: 1
+    path: Assets/Scenes/Reglas.unity
+    guid: 060422e48c7126b4e888784e5d3c5a2e
+  - enabled: 1
     path: Assets/Scenes/Dungeon1.unity
     guid: a0d803636ab79b941b69a12ebb287cb3
+  - enabled: 1
+    path: Assets/Scenes/Dungeon2.unity
+    guid: 8d55630c8c42f364eb8e2ebc6407e84e
+  - enabled: 1
+    path: Assets/Scenes/Dungeon3.unity
+    guid: 839250114401df940a3c316e54356f5b
+  - enabled: 1
+    path: Assets/Scenes/CreditsScene.unity
+    guid: 6df03dfd909744d49bc3219447c61e35
+  - enabled: 1
+    path: Assets/Scenes/DerrotaScene.unity
+    guid: 6958077433c2ca24b988325427ae0219
+  - enabled: 1
+    path: Assets/Scenes/FinalScene.unity
+    guid: 948f0531b7ffb93479a9722f5763a63f
   m_configObjects: {}

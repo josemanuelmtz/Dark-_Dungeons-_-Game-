@@ -32,6 +32,13 @@ public class Pausa : MonoBehaviour
 
     public void Cerrar()
     {
-        Application.Quit();
+        // Restablecer las estadísticas de GameManager
+        GameManager.Instance.playerScore = 0;
+        GameManager.Instance.playerLife = GameManager.Instance.playerMaxLife;
+        GameManager.Instance.playerDamage = 10;
+
+        SceneManager.LoadScene(0);
+
+        Reanudar();
     }
 }
