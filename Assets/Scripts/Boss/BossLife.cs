@@ -6,11 +6,16 @@ public class BossLife : MonoBehaviour
 {
     [SerializeField] private float vida;
     private PlayerScore playerScore; // Referencia al script de puntuación
+    public LevelManager levelManager;
+
+    [SerializeField] private int scoreValue = 200; // Puntos otorgados al morir
+    [SerializeField] private GameObject falseBorder; // Referencia a la pared específica que se destruirá
 
     private void Start()
     {
         // Busca el objeto que contiene el script PlayerScore en la escena
         playerScore = FindObjectOfType<PlayerScore>();
+        levelManager = FindObjectOfType<LevelManager>();
     }
 
     public void TomarDano(float dano)
@@ -24,13 +29,26 @@ public class BossLife : MonoBehaviour
 
     private void Muerte()
     {
-        // Otorga 200 puntos al jugador al morir
+        // Otorga puntos configurados al jugador
         if (playerScore != null)
         {
-            playerScore.AumentarPuntuacion(200);
+            playerScore.AumentarPuntuacion(scoreValue);
         }
 
-        // Destruye el objeto si la vida es 0 o menos
+        // Notifica al LevelManager si es necesario
+        if (levelManager != null)
+        {
+            levelManager.EnemyDefeated();
+        }
+
+        // Destruye la pared si está configurada
+        if (falseBorder != null)
+        {
+            Destroy(falseBorder);
+            Debug.Log("La pared ha sido destruida.");
+        }
+
+        // Destruye el objeto del jefe
         Destroy(gameObject);
     }
 }

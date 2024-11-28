@@ -172,8 +172,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -338472959
-  m_SortingLayer: 3
+  m_SortingLayerID: 127255577
+  m_SortingLayer: 4
   m_SortingOrder: 0
   m_Sprite: {fileID: 115024179, guid: 5f28be473e170e34ea12e439d11df971, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -291,7 +291,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de4b8087400d5d04fa578e3aa68e9df3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  vida: 100
+  vida: 200
+  levelManager: {fileID: 0}
 --- !u!114 &4316518060599488462
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -306,8 +307,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 10
   attackRange: 0.4
-  attackCooldown: 2
-  damageAttack: 40
+  attackCooldown: 3
+  damageAttack: 30
   damageTouch: 5
   controladorGolpeSur: {fileID: 8623289311238388146}
   controladorGolpeNorte: {fileID: 880777711445465717}

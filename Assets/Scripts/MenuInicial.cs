@@ -5,15 +5,28 @@ using UnityEngine.SceneManagement;
 
 public class MenuInicial : MonoBehaviour
 {
-    // Start is called before the first frame update
+    // Método para empezar el juego, cargando la escena Dungeon1
     public void Jugar()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);   
+        SceneManager.LoadScene("Dungeon1");
     }
 
+    // Método para mostrar las reglas del juego
+    public void Reglas()
+    {
+        SceneManager.LoadScene("Reglas");
+    }
+
+    // Método para mostrar los controles del juego
+    public void Controles()
+    {
+        SceneManager.LoadScene("Controles");
+    }
+
+    // Método para salir del juego
     public void Salir()
     {
         Debug.Log("Saliendo del Juego.......");
-        Application.Quit();
+        Application.Quit();  // Sale de la aplicación
     }
 }

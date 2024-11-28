@@ -79,7 +79,7 @@ GameObject:
   - component: {fileID: 4764237784387825860}
   m_Layer: 0
   m_Name: Orco1
-  m_TagString: Enemy
+  m_TagString: Boss
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -141,8 +141,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -338472959
-  m_SortingLayer: 3
+  m_SortingLayerID: 127255577
+  m_SortingLayer: 4
   m_SortingOrder: 0
   m_Sprite: {fileID: -277056381, guid: e595705e173ecc74eac2669e137e590a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -260,7 +260,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de4b8087400d5d04fa578e3aa68e9df3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  vida: 100
+  vida: 90
+  levelManager: {fileID: 0}
+  scoreValue: 100
 --- !u!114 &4764237784387825860
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -273,10 +275,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7745efac5c2ef9f499db7f10234f51c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 30
+  moveSpeed: 15
   attackRange: 0.25
   attackCooldown: 2
-  damageAttack: 20
+  damageAttack: 10
   damageTouch: 5
   controladorGolpeSur: {fileID: 2232485206427341186}
   controladorGolpeNorte: {fileID: 7508721484266286189}
